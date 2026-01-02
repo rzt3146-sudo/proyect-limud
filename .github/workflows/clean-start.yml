@@ -1,26 +1,23 @@
-name: NewDownload
+name: DirectPower
 on: workflow_dispatch
 jobs:
-  build:
+  download:
     runs-on: ubuntu-latest
     steps:
-      - name: Free Space
+      - name: Maximize Space
         run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /opt/ghc
-          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          sudo apt-get clean
 
-      - name: Download File
+      - name: Force Download
         run: |
           URL=$(echo "aHR0cHM6Ly9hcmNoaXZlLm9yZy9kb3dubG9hZC9mcmVzaC13b21lbi1zZWFzb24tMS12LTAuMTAuMS9GcmVzaCUyMFdvbWVuLVNlYXNvbiUyMDEtdjAuMTAuMS1wYy56aXA=" | base64 --decode)
-          wget -c -O data_package.txt "$URL" \
-            --user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64)" \
-            --tries=15 \
-            --waitretry=10
+          # שימוש ב-curl עם פקודת המשך אוטומטית
+          curl -L -C - -o "game_data.part" "$URL" --user-agent "Mozilla/5.0" --retry 10 --retry-delay 5
 
-      - name: Upload Result
+      - name: Split & Upload
         uses: actions/upload-artifact@v4
         with:
-          name: game-files
-          path: data_package.txt
+          name: game-output
+          path: game_data.part
           retention-days: 1
