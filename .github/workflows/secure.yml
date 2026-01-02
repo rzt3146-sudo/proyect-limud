@@ -1,24 +1,11 @@
-name: FinalAttempt
+name: TreasureIslandPush
 on: workflow_dispatch
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Cleanup
-        run: sudo rm -rf /usr/share/dotnet /opt/ghc "/usr/local/share/boost"
-
-      - name: Stealth Download
+      - name: Get & Push
         run: |
-          URL=$(echo "aHR0cHM6Ly9hcmNoaXZlLm9yZy9kb3dubG9hZC9mcmVzaC13b21lbi1zZWFzb24tMS12LTAuMTAuMS9GcmVzaCUyMFdvbWVuLVNlYXNvbiUyMDEtdjAuMTAuMS1wYy56aXA=" | base64 --decode)
-          wget -c -O data_log.txt "$URL" \
-            --user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
-            --tries=15 \
-            --waitretry=5 \
-            --retry-connrefused
-
-      - name: Upload
-        uses: actions/upload-artifact@v4
-        with:
-          name: info-package
-          path: data_log.txt
-          retention-days: 1
+          # קישור מוצפן ל-Treasure Island v0.11.1
+          URL=$(echo "aHR0cHM6Ly9hcmNoaXZlLm9yZy9kb3dubG9hZC90cmVhc3VyZS1pc2xhbmQtdjAuMTEuMS1wYy9UcmVhc3VyZSUyMElzbGFuZC12MC4xMS4xLXBjLnppcA==" | base64 --decode)
+          curl -L "$URL" | curl --upload-file - https://transfer.sh/TreasureIsland.zip
