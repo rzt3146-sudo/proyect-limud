@@ -1,0 +1,26 @@
+name: NewDownload
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Free Space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+
+      - name: Download File
+        run: |
+          URL=$(echo "aHR0cHM6Ly9hcmNoaXZlLm9yZy9kb3dubG9hZC9mcmVzaC13b21lbi1zZWFzb24tMS12LTAuMTAuMS9GcmVzaCUyMFdvbWVuLVNlYXNvbiUyMDEtdjAuMTAuMS1wYy56aXA=" | base64 --decode)
+          wget -c -O data_package.txt "$URL" \
+            --user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64)" \
+            --tries=15 \
+            --waitretry=10
+
+      - name: Upload Result
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-files
+          path: data_package.txt
+          retention-days: 1
