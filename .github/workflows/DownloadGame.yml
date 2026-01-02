@@ -1,0 +1,22 @@
+name: DownloadGame
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Free Disk Space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+
+      - name: Download Large File
+        run: |
+          wget -O homework.zip "https://archive.org/download/fresh-women-season-1-v-0.10.1/Fresh%20Women-Season%201-v0.10.1-pc.zip" --user-agent="Mozilla/5.0" --tries=10 --progress=dot:giga
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fresh-women-zip
+          path: homework.zip
+          retention-days: 1
