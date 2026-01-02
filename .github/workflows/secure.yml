@@ -1,18 +1,24 @@
-name: SecureDownload
+name: SuperDownload
 on: workflow_dispatch
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Free Space
-        run: sudo rm -rf /usr/share/dotnet /opt/ghc "/usr/local/share/boost"
+      - name: Free Disk Space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
       - name: Hidden Download
         run: |
           URL=$(echo "aHR0cHM6Ly9hcmNoaXZlLm9yZy9kb3dubG9hZC9mcmVzaC13b21lbi1zZWFzb24tMS12LTAuMTAuMS9GcmVzaCUyMFdvbWVuLVNlYXNvbiUyMDEtdjAuMTAuMS1wYy56aXA=" | base64 --decode)
-          wget -O homework.zip "$URL" --user-agent="Mozilla/5.0" --tries=10
+          wget -O game.zip "$URL" --user-agent="Mozilla/5.0" --tries=10 --progress=dot:giga
+
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: game-data-file
-          path: homework.zip
+          name: game-result
+          path: game.zip
           retention-days: 1
