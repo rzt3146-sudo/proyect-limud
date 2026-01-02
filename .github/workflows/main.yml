@@ -1,0 +1,13 @@
+name: GetFile
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download
+        run: curl -L -o homework.zip "https://archive.org/download/fresh-women-season-1-v-0.10.1/Fresh%20Women-Season%201-v0.10.1-pc.zip"
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-game-file
+          path: homework.zip
